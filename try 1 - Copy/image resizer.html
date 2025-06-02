@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Image Resizer</title>
+  <style>
+    * {
+      margin: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #0f0f0f, #000);
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .glow-bg {
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, #ff00cc, #3333ff, #00ffee, #ff00cc);
+      animation: rotate 12s linear infinite;
+      filter: blur(120px);
+      z-index: 0;
+      opacity: 0.1;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, #ff00cc, #3333ff);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    input[type="file"], input[type="number"] {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.5rem;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      background: #111;
+      color: white;
+      font-size: 0.95rem;
+    }
+
+    .row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .button {
+      background: linear-gradient(90deg, #00ffcc, #3366ff);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0.8rem 1.2rem;
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    }
+
+    .button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+    }
+
+    #output img {
+      max-width: 100%;
+      margin-top: 1rem;
+      border-radius: 10px;
+      border: 2px solid #444;
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #888;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-bg"></div>
+
+  <div class="container">
+    <h1> Image Resizer</h1>
+    <input type="file" id="imageInput" accept="image/*" />
+    <div class="row">
+      <input type="number" id="widthInput" placeholder="Width" />
+      <input type="number" id="heightInput" placeholder="Height" />
+    </div>
+    <button class="button" onclick="resizeImage()">Resize Image</button>
+    <div id="output"></div>
+  </div>
+
+  <footer>© <span id="year"></span> Khunni JK. All rights reserved.</footer>
+
+  <script>
+    const imageInput = document.getElementById('imageInput');
+    const widthInput = document.getElementById('widthInput');
+    const heightInput = document.getElementById('heightInput');
+    const output = document.getElementById('output');
+    let originalImage = null;
+
+    imageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => originalImage = reader.result;
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function resizeImage() {
+      const width = parseInt(widthInput.value);
+      const height = parseInt(heightInput.value);
+
+      if (!originalImage || isNaN(width) || isNaN(height)) return;
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.onload = () => {
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        const resizedUrl = canvas.toDataURL('image/png');
+
+        output.innerHTML = `
+          <img src="${resizedUrl}" alt="Resized Image" />
+          <a href="${resizedUrl}" download="resized-image.png">
+            <button class="button" style="margin-top: 1rem; background: linear-gradient(90deg, #00ff99, #9966ff);">Download Image</button>
+          </a>
+        `;
+      };
+      img.src = originalImage;
+    }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: white;
+      font-size: 1em;
+      user-select: none;
+      pointer-events: none;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    #hamburger {
+      width: 30px;
+      height: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    #hamburger div {
+      height: 4px;
+      background: white;
+      border-radius: 2px;
+    }
+
+    #search-container {
+      flex: 1;
+      padding: 0 1rem;
+    }
+
+    #search-container input {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 20px;
+      border: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    nav a {
+      color: #0ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-toggle {
+      cursor: pointer;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      left: 0;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid #0ff;
+      border-radius: 8px;
+      padding: 0.5rem 0;
+      min-width: 180px;
+      z-index: 100;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: #0ff;
+      text-decoration: none;
+    }
+
+    .dropdown-menu a:hover {
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 6px;
+    }
+
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    @media (max-width: 500px) {
+      .dropdown-menu {
+        right: 0;
+        left: auto;
+      }
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 140px auto 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 15px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      color: #0ff;
+      margin-bottom: 1rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input,
+    textarea,
+    select,
+    button {
+      padding: 0.7rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background: #00aaff;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #008ecc;
+      box-shadow: 0 0 10px #0ff;
+    }
+
+    #resume-preview {
+      display: none;
+      margin-top: 2rem;
+    }
+
+    #resume-card {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      color: #222;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    #resume-card img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    #photo-upload-container {
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: 2rem;
+    }
+
+    footer a {
+      color: #0ff;
+      text-decoration: underline;
+      margin: 0 5px;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        justify-content: center;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+
+      .container {
+        margin: 140px 1rem 2rem;
+        padding: 1rem;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div id="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div id="search-container"><input type="search" placeholder="Search here..." /></div>
+    <nav>
+      <a href="about.html">About</a>
+      <a href="Contect.html">Contact</a>
+      <div class="dropdown">
+        <a href="#" class="dropdown-toggle">More Options ▾</a>
+        <div class="dropdown-menu">
+          <a href="image compresser.html">image compresser</a>
+          <a href="#">Image Resizer</a>
+          <a href="#">Code Compressor</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Resume Generator</h1>
+    <form id="resume-form">
+      <label>Full Name</label><input type="text" id="fullName" required>
+      <label>Father’s Name</label><input type="text" id="fatherName" required>
+      <label>Mother’s Name</label><input type="text" id="motherName" required>
+      <label>Date of Birth</label><input type="date" id="dob" required>
+      <label>Address</label><textarea id="address" required></textarea>
+      <label>Phone</label><input type="tel" id="phone" required>
+      <label>Email</label><input type="email" id="email" required>
+      <label>Education</label><textarea id="education" required></textarea>
+      <label>Score</label><input type="text" id="score" required>
+      <label>Skills</label><textarea id="skills"></textarea>
+      <label>Career Objective</label><textarea id="careerObjective"></textarea>
+      <label>Hobbies</label><textarea id="hobbies"></textarea>
+      <label>Future Goals</label><textarea id="futureGoals"></textarea>
+      <label>Signature</label><input type="text" id="signature">
+      <label>Attach Photo?</label>
+      <select id="photoAttached">
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+      </select>
+      <div id="photo-upload-container">
+        <label>Upload Photo</label>
+        <input type="file" id="photoInput" accept="image/*">
+      </div>
+      <button type="submit">Generate Preview</button>
+      <button type="button" id="downloadPDF">Download PDF</button>
+    </form>
+
+    <div id="resume-preview">
+      <div id="resume-card">
+        <div
+          style="display: flex; align-items: center; gap: 1rem; border-bottom: 2px solid #eee; padding-bottom: 1rem;">
+          <img id="preview-photo" src="https://via.placeholder.com/120" alt="Photo">
+          <div>
+            <h1 id="preview-name" style="margin: 0; color: #0a6;">Your Name</h1>
+            <p><strong>Email:</strong> <span id="preview-email"></span></p>
+            <p><strong>Phone:</strong> <span id="preview-phone"></span></p>
+            <p><strong>Address:</strong> <span id="preview-address"></span></p>
+          </div>
+        </div>
+        <h3>Career Objective</h3>
+        <p id="preview-objective"></p>
+        <h3>Skills</h3>
+        <p id="preview-skills"></p>
+        <h3>Education</h3>
+        <p><span id="preview-education"></span> (Score: <span id="preview-score"></span>)</p>
+        <h3>Hobbies</h3>
+        <p id="preview-hobbies"></p>
+        <h3>Future Goals</h3>
+        <p id="preview-goals"></p>
+        <h3>Signature</h3>
+        <p id="preview-signature"></p>
+      </div>
+    </div>
+
+    <footer>
+      <p><strong>How to use:</strong> Fill the form and click "Generate Preview".</p>
+      <p>✅ No data is collected or stored.</p>
+    </footer>
+  </div>
+
+  <script>
+    const createSnowflake = () => {
+      const snowflake = document.createElement("div");
+      snowflake.classList.add("snowflake");
+      snowflake.style.left = Math.random() * window.innerWidth + "px";
+      snowflake.style.animationDuration = 5 + Math.random() * 5 + "s";
+      snowflake.style.fontSize = 10 + Math.random() * 20 + "px";
+      snowflake.innerText = "❄️";
+      document.body.appendChild(snowflake);
+      setTimeout(() => snowflake.remove(), 10000);
+    };
+    setInterval(createSnowflake, 200);
+
+    const form = document.getElementById('resume-form');
+    const previewBox = document.getElementById('resume-preview');
+    const photo = document.getElementById('preview-photo');
+    const photoSelect = document.getElementById('photoAttached');
+    const photoUploadContainer = document.getElementById('photo-upload-container');
+    const photoInput = document.getElementById('photoInput');
+
+    photoSelect.addEventListener('change', () => {
+      photoUploadContainer.style.display = photoSelect.value === 'yes' ? 'block' : 'none';
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      document.getElementById('preview-name').textContent = fullName.value;
+      document.getElementById('preview-email').textContent = email.value;
+      document.getElementById('preview-phone').textContent = phone.value;
+      document.getElementById('preview-address').textContent = address.value;
+      document.getElementById('preview-objective').textContent = careerObjective.value || 'N/A';
+      document.getElementById('preview-skills').textContent = skills.value || 'N/A';
+      document.getElementById('preview-education').textContent = education.value;
+      document.getElementById('preview-score').textContent = score.value;
+      document.getElementById('preview-hobbies').textContent = hobbies.value || 'N/A';
+      document.getElementById('preview-goals').textContent = futureGoals.value || 'N/A';
+      document.getElementById('preview-signature').textContent = signature.value || fullName.value;
+
+      if (photoInput.files && photoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          photo.src = e.target.result;
+          photo.style.display = 'block';
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+      } else {
+        photo.style.display = 'none';
+      }
+
+      previewBox.style.display = 'block';
+    });
+
+    document.getElementById('downloadPDF').addEventListener('click', () => {
+      alert("PDF generation requires backend setup.");
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All Tools Home</title>
+  <style>
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9fb;
+      color: #333;
+    }
+
+    a {
+      color: #0077ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Header */
+    header {
+      background: #004aad;
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    nav a {
+      margin-left: 20px;
+      font-weight: 600;
+      color: white;
+      /* white color */
+      position: relative;
+      padding-bottom: 4px;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: white;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 3px;
+      background: rgb(0, 150, 255);
+      box-shadow:
+        0 0 5px rgb(0, 150, 255),
+        0 0 10px rgb(0, 150, 255);
+      transition: width 0.3s ease;
+      border-radius: 2px;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Main content */
+    main {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    section.tools {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px;
+    }
+
+    .tool-card {
+      background: white;
+      padding: 25px 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
+      text-align: center;
+      transition: transform 0.25s ease;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .tool-card h3 {
+      margin-bottom: 15px;
+      color: #004aad;
+    }
+
+    .tool-card a {
+      display: inline-block;
+      margin-top: 12px;
+      background: #0077ff;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .tool-card a:hover {
+      background: #005bb5;
+    }
+
+    /* Footer */
+    footer {
+      background: #222;
+      color: #ccc;
+      text-align: center;
+      padding: 25px 10px;
+      margin-top: 50px;
+    }
+
+    footer a {
+      color: #66aaff;
+      margin: 0 15px;
+      font-weight: 600;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        margin-top: 10px;
+      }
+
+      nav a {
+        margin-left: 0;
+        margin-right: 15px;
+      }
+
+      about {
+        border: #0077ff;
+        width: 22px;
+        color: #000;
+        background-origin: padding-box;
+
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Multi Tool Hub</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#tools">Available Tools</a>
+      <a href="#tools">contect</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <section id="about">
+      <h2>ALL TOOLS HERE</h2>
+      <p>Welcome to Multi Tool Hub! Here you can find useful tools including Resume Maker, Image Compressor, Image
+        Resizer, and Code Compressor — all designed to simplify your workflow.</p>
+    </section>
+
+    <section id="tools" class="tools">
+      <div class="tool-card">
+        <h3>Resume Maker</h3>
+        <p>Create professional resumes quickly and easily.</p>
+        <a href="/resume-maker.html">Open Resume Maker</a>
+      </div>
+      <div class="tool-card">
+        <h3>Image Compressor</h3>
+        <p>Reduce image file size without losing quality.</p>
+        <a href="/image-compressor.html">Open Image Compressor</a>
+      </div>
+      <div class="tool-card">
+        <h3>Image Resizer</h3>
+        <p>Resize your images for any purpose with ease.</p>
+        <a href="/image-resizer.html">Open Image Resizer</a>
+      </div>
+      <div class="tool-card">
+        <h3>Code Compressor</h3>
+        <p>Minify your code for faster loading times.</p>
+        <a href="/code-compressor.html">Open Code Compressor</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Follow us on:
+      <a href="https://www.youtube.com/@khunni-jk" target="_blank" rel="noopener">YouTube</a> |
+      <a href="https://www.instagram.com/deamanrex?igsh=MWNnd2hwc2QzZ2V3ZQ==" target="_blank"
+        rel="noopener">Instagram</a>
+    </p>
+    <p style="margin-top: 10px;">&copy; 2025 khunni-jk</p>
+  </footer>
+
+</body>
+
+</html>

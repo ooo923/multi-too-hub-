@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pro Image Tool</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .bg-deco {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .bg-deco::before, .bg-deco::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(150px);
+      opacity: 0.3;
+      z-index: 0;
+    }
+
+    .bg-deco::before {
+      top: -200px;
+      left: -150px;
+      width: 600px;
+      height: 600px;
+      background: rgba(255, 0, 100, 0.7);
+      animation: float1 12s infinite alternate ease-in-out;
+    }
+
+    .bg-deco::after {
+      bottom: -150px;
+      right: -150px;
+      width: 500px;
+      height: 500px;
+      background: rgba(0, 255, 255, 0.5);
+      animation: float2 15s infinite alternate ease-in-out;
+    }
+
+    @keyframes float1 {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(100px, 80px); }
+    }
+
+    @keyframes float2 {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-80px, -60px); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 0, 100, 0.4);
+      box-shadow: 0 0 20px rgba(255, 0, 100, 0.3), 0 0 60px rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(25px);
+      border-radius: 24px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 480px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.8rem;
+      text-align: center;
+      background: linear-gradient(90deg, #ff0080, #00ffff);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+
+    input[type="file"] {
+      background: #222;
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    input[type="number"] {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    button {
+      background: linear-gradient(to right, #ff0066, #00ffff);
+      color: #fff;
+      font-weight: bold;
+      margin-top: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(255, 0, 100, 0.4);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 0, 100, 0.6);
+    }
+
+    .output img {
+      margin-top: 1.5rem;
+      max-width: 100%;
+      border-radius: 10px;
+      border: 1px solid #444;
+    }
+
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-deco"></div>
+
+  <div class="container">
+    <h2>Image Resizer & Compressor</h2>
+    <input type="file" id="imgInput" accept="image/*" />
+    <div class="row">
+      <input type="number" id="widthInput" placeholder="Width" />
+      <input type="number" id="heightInput" placeholder="Height" />
+    </div>
+    <input type="number" id="qualityInput" placeholder="Compression (0.1 - 1.0)" step="0.1" min="0.1" max="1" />
+    <button onclick="resizeAndCompress()">Resize & Compress</button>
+    <div class="output" id="output"></div>
+    <footer>© <span id="year"></span> Khunni JK. All rights reserved.</footer>
+  </div>
+
+  <script>
+    let originalImage = null;
+    document.getElementById('imgInput').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => originalImage = reader.result;
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function resizeAndCompress() {
+      const width = parseInt(document.getElementById('widthInput').value);
+      const height = parseInt(document.getElementById('heightInput').value);
+      let quality = parseFloat(document.getElementById('qualityInput').value);
+      if (!originalImage || isNaN(width) || isNaN(height)) return;
+      if (isNaN(quality) || quality < 0.1 || quality > 1) quality = 0.8;
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.onload = () => {
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        document.getElementById('output').innerHTML = `
+          <img src="${dataUrl}" />
+          <a href="${dataUrl}" download="resized-image.jpg">
+            <button style="margin-top: 1rem;">Download</button>
+          </a>
+        `;
+      };
+      img.src = originalImage;
+    }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeCompress Pro | Responsive Code Compressor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #06d6a0;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --border: #cbd5e1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--darker), #1e293b);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            flex: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            background: rgba(6, 214, 160, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .tool-container {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: fadeInUp 0.8s ease;
+            margin-bottom: 30px;
+        }
+
+        .panes-container {
+            display: flex;
+            min-height: 500px;
+        }
+
+        .input-pane,
+        .output-pane {
+            flex: 1;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .input-pane {
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .pane-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .pane-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .pane-title i {
+            color: var(--secondary);
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        textarea,
+        pre {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--light);
+            border: none;
+            resize: none;
+            outline: none;
+            line-height: 1.8;
+            tab-size: 4;
+        }
+
+        pre {
+            overflow: auto;
+            margin: 0;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--light);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #0da271;
+        }
+
+        .voice-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: rgba(6, 214, 160, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .voice-input:hover {
+            background: rgba(6, 214, 160, 0.15);
+        }
+
+        .mic-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--error);
+            position: relative;
+        }
+
+        .mic-icon.pulsing::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        .status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            background: var(--success);
+            color: white;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .status.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        .processing .spinner {
+            display: inline-block;
+        }
+
+        .mobile-toggle {
+            display: none;
+            width: 100%;
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.5);
+            border: none;
+            color: var(--light);
+            font-weight: 600;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .mobile-toggle:hover {
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        .compression-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        /* How to Use Section */
+        .how-to-use {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .how-to-use h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--secondary);
+        }
+
+        .how-to-use h2 i {
+            background: rgba(6, 214, 160, 0.1);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .step-card {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: var(--transition);
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .step-card h3 {
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        .step-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px 0;
+            margin-top: auto;
+            border-radius: 16px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .copyright {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-link {
+            color: var(--light);
+            font-size: 1.4rem;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.08);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .social-link.youtube:hover {
+            background: #FF0000;
+        }
+
+        .social-link.instagram:hover {
+            background: #E1306C;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            70% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .panes-container {
+                flex-direction: column;
+            }
+
+            .input-pane {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .output-pane {
+                display: none;
+            }
+
+            .output-pane.active {
+                display: flex;
+                animation: slideUp 0.5s ease;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .controls {
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                flex: 1;
+                min-width: 140px;
+                justify-content: center;
+            }
+
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        }
+
+        @media (max-width: 768px) {
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .btn {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+
+            .pane-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .pane-actions {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .compression-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .how-to-use {
+                padding: 20px;
+            }
+
+            .how-to-use h2 {
+                font-size: 1.5rem;
+            }
+
+            .footer-content {
+                text-align: center;
+                padding: 0 20px;
+            }
+
+            .social-links {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-compress-alt"></i>
+            </div>
+            <h1>CodeCompress Pro</h1>
+            <p class="subtitle">Optimize your code with our responsive compressor tool. Works seamlessly on desktop and
+                mobile devices.</p>
+        </header>
+
+        <div class="tool-container">
+            <div class="panes-container">
+                <div class="input-pane">
+                    <div class="pane-header">
+                        <h2 class="pane-title"><i class="fas fa-code"></i> Input Code</h2>
+                        <div class="pane-actions">
+                            <button class="btn btn-secondary" id="clear-btn">
+                                <i class="fas fa-trash-alt"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                    <div class="editor-container">
+                        <textarea id="input-code" placeholder="Enter your code here...">function fibonacci(n) {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+// Calculate factorial
+function factorial(num) {
+    if (num === 0 || num === 1) return 1;
+    for (var i = num - 1; i >= 1; i--) {
+        num *= i;
+    }
+    return num;
+}
+
+console.log("Fibonacci of 10: ", fibonacci(10));
+console.log("Factorial of 5: ", factorial(5));</textarea>
+                    </div>
+
+                    <div class="voice-input" id="voice-toggle">
+                        <div class="mic-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="voice-label">Voice input (click to activate)</div>
+                    </div>
+                </div>
+
+                <div class="output-pane" id="output-pane">
+                    <div class="pane-header">
+                        <h2 class="pane-title"><i class="fas fa-file-code"></i> Compressed Output</h2>
+                        <div class="pane-actions">
+                            <button class="btn btn-success" id="copy-btn">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="editor-container">
+                        <pre><code id="output-code" class="language-javascript">// Compressed code will appear here</code></pre>
+                    </div>
+
+                    <div class="compression-stats">
+                        <div class="stat">
+                            <span class="stat-value">0%</span>
+                            <span class="stat-label">Reduction</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Original chars</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Compressed chars</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">0ms</span>
+                            <span class="stat-label">Processing time</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="mobile-toggle" id="mobile-toggle">
+                <i class="fas fa-chevron-down"></i> Show Compressed Output
+            </button>
+
+            <div class="controls">
+                <button class="btn btn-primary" id="compress-btn">
+                    <span class="spinner"></span>
+                    <i class="fas fa-compress-alt"></i> Compress Code
+                </button>
+                <button class="btn btn-secondary" id="sample-btn">
+                    <i class="fas fa-file-code"></i> Load Sample
+                </button>
+                <button class="btn btn-secondary" id="download-btn">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+        </div>
+
+        <!-- How to Use Section -->
+        <div class="how-to-use">
+            <h2><i class="fas fa-graduation-cap"></i> How to Use CodeCompress Pro</h2>
+            <div class="steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Enter Your Code</h3>
+                    <p>Type or paste your code into the input pane. You can also use voice input by clicking the
+                        microphone icon.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Compress</h3>
+                    <p>Click the "Compress Code" button to optimize your code. The tool will remove unnecessary
+                        whitespace and comments.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Review Results</h3>
+                    <p>Check the compressed code in the output pane. You'll see statistics showing the space savings.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Export</h3>
+                    <p>Copy the compressed code to clipboard or download it as a file for use in your projects.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">
+                &copy; 2023 CodeCompress Pro | Created by Khunni JK
+            </div>
+            <div class="social-links">
+                <a href="https://www.youtube.com/@khunni-jk" target="_blank" class="social-link youtube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://www.instagram.com/deamanrex?igsh=MWNnd2hwc2QzZ2V3ZQ==" target="_blank"
+                    class="social-link instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="status" id="status">Code copied to clipboard!</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // DOM Elements
+            const inputCode = document.getElementById('input-code');
+            const outputCode = document.getElementById('output-code');
+            const compressBtn = document.getElementById('compress-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const sampleBtn = document.getElementById('sample-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const voiceToggle = document.getElementById('voice-toggle');
+            const micIcon = voiceToggle.querySelector('.mic-icon');
+            const mobileToggle = document.getElementById('mobile-toggle');
+            const outputPane = document.getElementById('output-pane');
+            const status = document.getElementById('status');
+            const statsValues = document.querySelectorAll('.stat-value');
+            const voiceLabel = voiceToggle.querySelector('.voice-label');
+
+            // Voice recognition setup
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            let recognition = null;
+            let isListening = false;
+
+            if (SpeechRecognition) {
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = function () {
+                    isListening = true;
+                    micIcon.classList.add('pulsing');
+                    voiceLabel.textContent = 'Listening... Speak now';
+                    showStatus('Voice input activated. Start speaking...');
+                };
+
+                recognition.onresult = function (event) {
+                    const transcript = Array.from(event.results)
+                        .map(result => result[0])
+                        .map(result => result.transcript)
+                        .join('');
+
+                    inputCode.value += transcript;
+                };
+
+                recognition.onerror = function (event) {
+                    console.error('Speech recognition error', event.error);
+                    showStatus('Voice input error: ' + event.error, true);
+                    stopVoiceRecognition();
+                };
+
+                recognition.onend = function () {
+                    if (isListening) {
+                        recognition.start(); // Restart if still listening
+                    }
+                };
+            } else {
+                voiceLabel.textContent = 'Voice input not supported in this browser';
+                voiceToggle.style.opacity = 0.7;
+                voiceToggle.style.cursor = 'not-allowed';
+            }
+
+            function startVoiceRecognition() {
+                if (recognition) {
+                    try {
+                        recognition.start();
+                    } catch (err) {
+                        showStatus('Voice input failed to start', true);
+                    }
+                }
+            }
+
+            function stopVoiceRecognition() {
+                if (recognition) {
+                    recognition.stop();
+                    isListening = false;
+                    micIcon.classList.remove('pulsing');
+                    voiceLabel.textContent = 'Voice input (click to activate)';
+                    showStatus('Voice input stopped');
+                }
+            }
+
+            // Demo compression function
+            function compressCode(code) {
+                // Simple compression for demo purposes
+                return code
+                    .replace(/\/\/.*$/gm, '') // Remove single-line comments
+                    .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
+                    .replace(/\s+/g, ' ') // Collapse whitespace
+                    .replace(/\s?([\{\}()\[\];=,+\-*\/%<>!&|])\s?/g, '$1') // Remove spaces around operators
+                    .trim();
+            }
+
+            // Calculate compression stats
+            function calculateStats(original, compressed) {
+                const originalLength = original.length;
+                const compressedLength = compressed.length;
+                const reduction = originalLength ? Math.round((1 - compressedLength / originalLength) * 100) : 0;
+                return {
+                    original: originalLength,
+                    compressed: compressedLength,
+                    reduction: reduction,
+                    time: Math.floor(Math.random() * 50) + 10 // Random processing time for demo
+                };
+            }
+
+            // Update stats display
+            function updateStats(stats) {
+                statsValues[0].textContent = `${stats.reduction}%`;
+                statsValues[1].textContent = stats.original;
+                statsValues[2].textContent = stats.compressed;
+                statsValues[3].textContent = `${stats.time}ms`;
+            }
+
+            // Show status notification
+            function showStatus(message, isError = false) {
+                status.textContent = message;
+                status.style.background = isError ? 'var(--error)' : 'var(--success)';
+                status.classList.add('show');
+
+                setTimeout(() => {
+                    status.classList.remove('show');
+                }, 3000);
+            }
+
+            // Compress button handler
+            compressBtn.addEventListener('click', function () {
+                const code = inputCode.value;
+
+                if (!code.trim()) {
+                    showStatus('Please enter some code to compress', true);
+                    return;
+                }
+
+                // Show spinner
+                compressBtn.classList.add('processing');
+
+                // Simulate processing time
+                setTimeout(() => {
+                    // Compress the code
+                    const compressed = compressCode(code);
+                    outputCode.textContent = compressed;
+                    hljs.highlightElement(outputCode);
+
+                    // Calculate and display stats
+                    const stats = calculateStats(code, compressed);
+                    updateStats(stats);
+
+                    // Hide spinner
+                    compressBtn.classList.remove('processing');
+
+                    // On mobile, show output pane
+                    if (window.innerWidth <= 992) {
+                        outputPane.classList.add('active');
+                        mobileToggle.innerHTML = '<i class="fas fa-chevron-up"></i> Hide Compressed Output';
+                    }
+
+                    showStatus('Code compressed successfully!');
+                }, 800);
+            });
+
+            // Clear button handler
+            clearBtn.addEventListener('click', function () {
+                inputCode.value = '';
+                outputCode.textContent = '// Compressed code will appear here';
+                hljs.highlightElement(outputCode);
+
+                // Reset stats
+                updateStats({ reduction: 0, original: 0, compressed: 0, time: 0 });
+
+                // Stop voice if active
+                if (isListening) {
+                    stopVoiceRecognition();
+                }
+
+                showStatus('Input cleared');
+            });
+
+            // Copy button handler
+            copyBtn.addEventListener('click', function () {
+                const text = outputCode.textContent;
+
+                if (!text || text === '// Compressed code will appear here') {
+                    showStatus('No compressed code to copy', true);
+                    return;
+                }
+
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        showStatus('Copied to clipboard!');
+                    })
+                    .catch(err => {
+                        showStatus('Failed to copy: ' + err, true);
+                    });
+            });
+
+            // Sample button handler
+            sampleBtn.addEventListener('click', function () {
+                inputCode.value = `// Sample JavaScript code
+function calculateSum(arr) {
+    let total = 0;
+    for (let i = 0; i < arr.length; i++) {
+        total += arr[i];
+    }
+    return total;
+}
+
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const sum = calculateSum(numbers);
+
+console.log("The sum is: " + sum);`;
+
+                showStatus('Sample code loaded');
+            });
+
+            // Download button handler
+            downloadBtn.addEventListener('click', function () {
+                const text = outputCode.textContent;
+
+                if (!text || text === '// Compressed code will appear here') {
+                    showStatus('No compressed code to download', true);
+                    return;
+                }
+
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'compressed-code.js';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showStatus('File downloaded!');
+            });
+
+            // Voice input toggle
+            voiceToggle.addEventListener('click', function () {
+                if (!recognition) return;
+
+                if (isListening) {
+                    stopVoiceRecognition();
+                } else {
+                    startVoiceRecognition();
+                }
+            });
+
+            // Mobile output toggle
+            mobileToggle.addEventListener('click', function () {
+                outputPane.classList.toggle('active');
+
+                if (outputPane.classList.contains('active')) {
+                    mobileToggle.innerHTML = '<i class="fas fa-chevron-up"></i> Hide Compressed Output';
+                } else {
+                    mobileToggle.innerHTML = '<i class="fas fa-chevron-down"></i> Show Compressed Output';
+                }
+            });
+
+            // Initialize code highlighting
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+
+</html>

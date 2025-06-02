@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pluging Buy Hub</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --bg: #0f172a;
+      --text: #f3f4f6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    /* HEADER */
+    header {
+      background-color: #4f46e5; /* fixed strong blue for all devices */
+      background-image: none !important;
+      background-blend-mode: normal !important;
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      flex: 1 1 200px;
+      animation: fadeSlide 1.2s ease;
+      text-align: left;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 1.5rem;
+      flex: 1 1 300px;
+      max-width: 600px;
+    }
+
+    nav a {
+      color: white;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+      padding: 0.3rem 0.6rem;
+      font-size: 1.1rem;
+      transition: color 0.3s ease;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, #0ff, #f0f);
+      box-shadow: 0 0 10px #0ff;
+      transition: width 0.4s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    nav a:hover {
+      color: #00ffe5;
+      text-shadow: 0 0 5px #0ff, 0 0 15px #0ff;
+    }
+
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* MAIN */
+    main {
+      flex: 1 0 auto;
+      padding: 2rem 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2.5rem;
+      color: #60a5fa;
+    }
+
+    /* Plugin cards row horizontal on big screens */
+    .plugin-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+
+    /* Each card min width, flexible */
+    .plugin {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      border: 2px solid transparent;
+      transition: 0.3s ease;
+      min-width: 280px;
+      max-width: 350px;
+      flex: 1 1 300px;
+    }
+
+    .plugin:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 10px #0ff, 0 0 20px #f0f;
+      border-image: linear-gradient(45deg, #00f0ff, #ff00f7) 1;
+    }
+
+    .plugin h3 {
+      color: #93c5fd;
+      margin-bottom: 0.6rem;
+      font-size: 1.3rem;
+    }
+
+    .plugin p {
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .buy-btn {
+      background-color: black;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.65rem 1.4rem;
+      font-size: 1rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .buy-btn::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, red, yellow, lime, cyan, blue, magenta, red);
+      background-size: 400%;
+      animation: rgbPulse 6s linear infinite;
+      z-index: -1;
+      filter: blur(8px);
+    }
+
+    .buy-btn:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes rgbPulse {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* FOOTER */
+    footer {
+      flex-shrink: 0;
+      background: #111827;
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .social a {
+      color: white;
+      font-size: 1.6rem;
+      margin: 0 12px;
+      transition: transform 0.3s ease, color 0.3s ease;
+      display: inline-block;
+    }
+
+    .social a:hover {
+      transform: scale(1.3) rotate(5deg);
+      color: #00ffe5;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    footer p {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.7rem;
+      }
+
+      header h1,
+      nav {
+        flex: none;
+        max-width: 100%;
+        justify-content: center !important;
+      }
+
+      nav {
+        gap: 1rem;
+      }
+
+      main {
+        padding: 1rem 1rem;
+      }
+
+      .plugin-list {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      nav a {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+      }
+
+      .buy-btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1.2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header>
+    <h1>Pluging Buy Hub</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#">Tools</a>
+    </nav>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <h2 class="section-title">Explore Our Premium Plugins</h2>
+
+    <div class="plugin-list">
+      <div class="plugin">
+        <h3>SEO Booster</h3>
+        <p>Optimize your site for search engines in one click. Lightweight & powerful.</p>
+        <button class="buy-btn">Buy Now</button>
+      </div>
+      <div class="plugin">
+        <h3>Speed Optimizer</h3>
+        <p>Accelerate your website with smart caching and lazy loading.</p>
+        <button class="buy-btn">Buy Now</button>
+      </div>
+      <div class="plugin">
+        <h3>Security Shield</h3>
+        <p>Protect your site from attacks with real-time firewalls and monitoring.</p>
+        <button class="buy-btn">Buy Now</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="social">
+      <a href="https://www.youtube.com/@khunni-jk" target="_blank" aria-label="YouTube">
+        <i class="fab fa-youtube"></i>
+      </a>
+      <a href="https://www.instagram.com/deamanrex?igsh=MWNnd2hwc2QzZ2V3ZQ==" target="_blank" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+    </div>
+    <p>&copy; 2025 Pluging Buy Hub. All rights reserved. By <strong>khunni-jk</strong></p>
+  </footer>
+</body>
+
+</html>
